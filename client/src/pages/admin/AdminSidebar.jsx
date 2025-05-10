@@ -11,7 +11,7 @@ const AdminSidebar = () => {
 
   return (
     <aside className="w-64 min-h-screen bg-gray-900 text-white p-6 space-y-6">
-      <Link to={'/'}><h2  className="text-2xl font-bold text-blue-400 mb-6">CampusConnect</h2></Link>
+      {/* <Link to={'/'}><h2  className="text-2xl font-bold text-blue-400 mb-6">CampusConnect</h2></Link> */}
 
       <div className="space-y-4">
         <h3 className="text-sm uppercase text-gray-400 tracking-wide">General</h3>

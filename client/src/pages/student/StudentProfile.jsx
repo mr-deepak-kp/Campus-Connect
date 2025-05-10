@@ -5,7 +5,7 @@ import Topbar from '../../components/Topbar.jsx';
 
 const StudentProfile = () => {
   const { user } = useContext(AuthContext);
-
+  console.log(user);
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -22,10 +22,11 @@ const StudentProfile = () => {
             <h2 className="text-2xl font-bold mb-6 text-center text-indigo-700">Student Profile</h2>
             <div className="space-y-4 text-lg">
               <p><span className="font-semibold">Name:</span> {user.name}</p>
-              <p><span className="font-semibold">Course:</span> {user.course || 'N/A'}</p>
-              <p><span className="font-semibold">Roll No:</span> {user.rollNo || user.id}</p>
               <p><span className="font-semibold">Email:</span> {user.email}</p>
+              <p><span className="font-semibold">Roll No:</span> {user.rollNo || user.id}</p>
+              <p><span className="font-semibold">Course:</span> {user.course || 'N/A'}</p>
               <p><span className="font-semibold">Branch:</span> {user.branch || 'N/A'}</p>
+              <p><span className="font-semibold">Batch:</span> {user.batch || 'N/A'}</p>
             </div>
           </div>
         </div>

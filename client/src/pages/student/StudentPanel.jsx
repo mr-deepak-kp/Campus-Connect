@@ -3,6 +3,7 @@ import { AuthContext } from '../../context/AuthContext.jsx';
 import axios from 'axios';
 import StudentSidebar from './StudentSidebar.jsx';
 import Topbar from '../../components/Topbar.jsx';
+import TopNav from '../../components/homeComponents/TopNav.jsx';
 
 const StudentPanel = () => {
   const { user } = useContext(AuthContext);
@@ -25,6 +26,8 @@ const StudentPanel = () => {
   const absentCount = records.filter(r => r.status === 'absent').length;
 
   return (
+    <>
+    <TopNav/>
     <div className="flex min-h-screen">
       <StudentSidebar />
       <div className="flex-1 bg-gray-50">
@@ -34,7 +37,7 @@ const StudentPanel = () => {
           
           <div className="bg-white rounded-lg shadow-md p-4 mb-6">
             <p className="text-lg"><strong>Name:</strong> {user.name}</p>
-            <p className="text-lg"><strong>Student ID:</strong> {user.id}</p>
+            <p className="text-lg"><strong>Student ID:</strong> {user.rollNo}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -54,6 +57,7 @@ const StudentPanel = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

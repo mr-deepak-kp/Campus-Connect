@@ -10,7 +10,7 @@ const Register = () => {
     role: 'student',
     rollNo: '',
     branch: '',
-    course: '',
+    course: 'Btech',
     batch: '',
     teacherId: '',
     dept: ''
@@ -26,14 +26,15 @@ const Register = () => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:5000/api/auth/register', form);
-      navigate('/admin');
+      alert("User registered successfully");
+      navigate('/admin/users');
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed.");
     }
   };
 
   const { role } = form;
-
+  const {course} = form;
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <form onSubmit={handleSubmit} className="bg-white shadow-xl rounded-lg p-8 w-full max-w-lg">
@@ -74,8 +75,13 @@ const Register = () => {
               <input type="text" name="rollNo" value={form.rollNo} onChange={handleChange} className="form-input" placeholder="Enter roll number" />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Batch</label>
-              <input type="text" name="batch" value={form.batch} onChange={handleChange} className="form-input" placeholder="Enter batch year" />
+               <label className="block text-gray-700">Batch</label>
+               <select name="batch" value={form.batch} onChange={handleChange} className="form-input">
+               <option value="2022-2026">2022-2026</option>
+               <option value="2023-2027">2023-2027</option>
+               <option value="2024-2028">2024-2028</option>
+               <option value="2025-2029">2025-2029</option>
+               </select>
             </div>
           </>
         )}
@@ -98,13 +104,30 @@ const Register = () => {
         {(role === 'admin' || role === 'student' || role === 'teacher') && (
           <>
             <div className="mb-4">
-              <label className="block text-gray-700">Course</label>
-              <input type="text" name="course" value={form.course} onChange={handleChange} className="form-input" placeholder="Enter course name" />
+               <label className="block text-gray-700">Course</label>
+               <select name="course" value={form.course} onChange={handleChange} className="form-input">
+               <option value="Btech">Btech</option>
+               <option value="BE">BE</option>
+               <option value="Pharmacy">Pharmacy</option>
+               <option value="BSE">BSE</option>
+               </select>
             </div>
-            <div className="mb-6">
-              <label className="block text-gray-700">Branch</label>
-              <input type="text" name="branch" value={form.branch} onChange={handleChange} className="form-input" placeholder="Enter branch name" />
-            </div>
+            { (course == "Btech") && (
+              <>
+              <div className="mb-4">
+               <label className="block text-gray-700">Branch</label>
+               <select name="branch" value={form.branch} onChange={handleChange} className="form-input">
+               <option value="cse">CSE</option>
+               <option value="ce">CE</option>
+               <option value="me">ME</option>
+               <option value="ec">EC</option>
+               <option value="ex">EX</option>
+               </select>
+              </div>
+              </>
+            )
+
+            }
           </>
         )}
 

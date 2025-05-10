@@ -20,9 +20,9 @@ const StudentSidebar = () => {
 
   return (
     <div className="w-64 min-h-screen bg-indigo-800 text-white shadow-lg flex flex-col">
-      <Link to={'/'}><div className="text-2xl font-bold px-6 py-6 border-b border-indigo-700">
+      {/* <Link to={'/'}><div className="text-2xl font-bold px-6 py-6 border-b border-indigo-700">
         Campus<span className="text-yellow-300">Connect</span>
-      </div></Link>
+      </div></Link> */}
       <nav className="flex flex-col p-4 space-y-2 text-sm font-medium">
         {navItems.map((item, index) => (
           <NavLink

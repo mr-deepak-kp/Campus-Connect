@@ -3,6 +3,7 @@ import Topbar from '../../components/Topbar.jsx';
 import TeacherSidebar from './TeacherSidebar.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import axios from 'axios';
+import TopNav from '../../components/homeComponents/TopNav.jsx';
 
 const TeacherPanel = () => {
   const { user } = useContext(AuthContext);
@@ -27,6 +28,8 @@ const TeacherPanel = () => {
   }, [user]);
 
   return (
+    <>
+    <TopNav/>
     <div className="flex min-h-screen bg-gray-100">
       <TeacherSidebar />
       
@@ -53,6 +56,7 @@ const TeacherPanel = () => {
         </main>
       </div>
     </div>
+    </>
   );
 };
 

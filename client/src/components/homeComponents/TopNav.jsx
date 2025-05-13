@@ -23,6 +23,7 @@ const TopNav = () => {
         {/* Right Section: Links */}
         <div className="flex space-x-4 items-center">
           <Link to="/" className="text-sm hover:text-yellow-400 transition">Home</Link>
+          <Link to="/dashboard" className="text-sm hover:text-yellow-400 transition">Dashboard</Link>
           <button onClick={() => setUser(null)} className="text-sm hover:text-yellow-400 transition">Logout</button>
         </div>
       </div>
@@ -55,7 +56,7 @@ const TopNav = () => {
             <span onClick={e=>setUserType("Student")}>Student Login</span>
           </Link>
           <Link
-            to="/login" about='Shubham'
+            to="/login"
             className="text-sm hover:text-yellow-400 transition"
           >
             <span onClick={e=>setUserType("Faculty")}>Faculty Login</span>

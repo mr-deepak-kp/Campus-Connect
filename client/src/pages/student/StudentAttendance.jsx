@@ -3,17 +3,18 @@ import { AuthContext } from '../../context/AuthContext.jsx';
 import AttendanceTable from '../../components/AttendanceTable.jsx';
 import axios from 'axios';
 import StudentSidebar from './StudentSidebar.jsx';
-
+import TopNav from '../../components/homeComponents/TopNav.jsx';
 const StudentAttendance = () => {
   const { user } = useContext(AuthContext);
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     const fetchAttendance = async () => {
-      const res = await axios.get(`http://localhost:5000/api/attendance/student/${user.id}`);
+      const res = await axios.get(`http://localhost:5000/api/attendance/student/${user._id}`);
+      console.log(res);
       setRecords(res.data);
     };
-    if (user?.id) fetchAttendance();
+    if (user?._id) fetchAttendance();
   }, [user]);
 
   const presentCount = records.filter(r => r.status === 'present').length;
@@ -21,6 +22,8 @@ const StudentAttendance = () => {
   const totalCount = records.length;
 
   return (
+    <>
+    <TopNav/>
     <div className="flex">
       <StudentSidebar />
       <div className="flex-1 p-6 bg-gray-100 min-h-screen">
@@ -44,6 +47,7 @@ const StudentAttendance = () => {
         <AttendanceTable records={records} />
       </div>
     </div>
+    </>
   );
 };
 

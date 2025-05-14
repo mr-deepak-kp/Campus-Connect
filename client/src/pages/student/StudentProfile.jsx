@@ -2,11 +2,13 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import Sidebar from './StudentSidebar.jsx';
 import Topbar from '../../components/Topbar.jsx';
-
+import TopNav from '../../components/homeComponents/TopNav.jsx';
 const StudentProfile = () => {
   const { user } = useContext(AuthContext);
   console.log(user);
   return (
+    <>
+    <TopNav/>
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <Sidebar />
@@ -32,6 +34,7 @@ const StudentProfile = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

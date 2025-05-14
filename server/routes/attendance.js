@@ -37,7 +37,7 @@ router.get('/student/:id', async (req, res) => {
 // Get all attendance (admin or teacher) dashboard
 router.get('/', async (req, res) => {
     try {
-        const records = await Attendance.find().populate('student', 'name email').populate('markedBy', 'name');
+        const records = await Attendance.find().populate('student', 'name email batch branch course').populate('markedBy', 'name');
         res.json(records);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -48,18 +48,22 @@ router.get('/', async (req, res) => {
 router.get('/csv', async (req, res) => {
     try {
         const records = await Attendance.find()
-        .populate('student', 'name')
+        .populate('student', 'name email batch course branch')
         .populate('markedBy', 'name');
   
         // Flatten records for CSV for downloading csv file  
         const flatRecords = records.map((record) => ({
         studentName: record.student?.name || '',
+        Email: record.student.email,
+        Batch: record.student.batch,
+        Course: record.student.course,
+        Branch: record.student.branch,
         date: record.date,
         subject: record.subject,
         status: record.status,
-        markedByName: record.markedBy?.name || '',
+        markedBy: record.markedBy?.name || '',
     }));
-      const fields = ['studentName', 'date', 'subject', 'status', 'markedByName'];
+      const fields = ['studentName','Email','Batch','Course','Branch', 'date', 'subject', 'status', 'markedByName'];
       const parser = new Parser({ fields });
       const csv = parser.parse(flatRecords);
   
@@ -74,16 +78,22 @@ router.get('/csv', async (req, res) => {
 // routes/attendance.js for check whether attendance is take or not in a day
 router.get('/check', async (req, res) => {
     try {
+      console.log("call");
       const { markedBy, date } = req.query;
-  
+      if(!date){
+        const records = await Attendance.find({markedBy});
+        console.log(records);
+        return res.status(200).json({records});
+      }
       const records = await Attendance.find({ markedBy, date });
-  
+      console.log(records);
       if (records.length > 0) {
         return res.status(200).json({ exists: true, records });
       } else {
         return res.status(200).json({ exists: false });
       }
     } catch (err) {
+      console.log(err);
       return res.status(500).json({ message: "Error checking attendance", error: err.message });
     }
 });

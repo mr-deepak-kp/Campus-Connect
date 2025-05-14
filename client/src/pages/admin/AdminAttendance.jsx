@@ -10,6 +10,7 @@ const AdminAttendance = () => {
     const fetchData = async () => {
       try {
         const attendanceRes = await axios.get('http://localhost:5000/api/attendance');
+        console.log(attendanceRes);
         setAttendance(attendanceRes.data);
       } catch (error) {
         console.error('Error fetching data:', error);

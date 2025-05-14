@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const attendanceSchema = new mongoose.Schema({
     student: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Student',
         required: true,
     },
     date: {
@@ -21,7 +21,7 @@ const attendanceSchema = new mongoose.Schema({
     },
     markedBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // typically a teacher
+        ref: 'Teacher', // typically a teacher
     }
 });
 

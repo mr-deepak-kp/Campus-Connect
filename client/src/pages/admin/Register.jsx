@@ -9,11 +9,12 @@ const Register = () => {
     password: '',
     role: 'student',
     rollNo: '',
-    branch: '',
+    branch: 'cse',
     course: 'Btech',
     batch: '',
     teacherId: '',
-    dept: ''
+    adminId:'',
+    courseAssigned:0,
   });
 
   const navigate = useNavigate();
@@ -94,12 +95,20 @@ const Register = () => {
               <input type="text" name="teacherId" value={form.teacherId} onChange={handleChange} className="form-input" placeholder="Enter Teacher ID" />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Department</label>
-              <input type="text" name="dept" value={form.dept} onChange={handleChange} className="form-input" placeholder="Enter department" />
+              <label className="block text-gray-700">Course Assigned</label>
+              <input type="text" name="courseAssigned" value={form.courseAssigned} onChange={handleChange} className="form-input" placeholder="Enter no. of course " />
             </div>
           </>
         )}
+        {/* Admin Fields */}
+        { (role == 'admin') && (
+              <div className="mb-4">
+              <label className="block text-gray-700">Admin ID</label>
+              <input type="text" name="adminId" value={form.adminId} onChange={handleChange} className="form-input" placeholder="Enter Admin ID" />
+            </div>
+            )
 
+            }
         {/* Admin & All Roles */}
         {(role === 'admin' || role === 'student' || role === 'teacher') && (
           <>
@@ -126,8 +135,8 @@ const Register = () => {
               </div>
               </>
             )
-
             }
+            
           </>
         )}
 

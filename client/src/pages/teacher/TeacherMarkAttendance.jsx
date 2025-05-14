@@ -6,59 +6,67 @@ import { Link } from 'react-router-dom';
 const TeacherMarkAttendance = () => {
   const { user } = useContext(AuthContext);
   const [students, setStudents] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [attendance, setAttendance] = useState({});
   const [subject, setSubject] = useState('');
-  const [course, setCourse] = useState('');
-  const [branch, setBranch] = useState('');
-  const [session, setSession] = useState('');
+  const [course, setCourse] = useState('btech');
+  const [branch, setBranch] = useState('cse');
+  const [session, setSession] = useState('2022-2026');
   const [submittedToday, setSubmittedToday] = useState(false);
-  const date = new Date().toISOString().slice(0, 10); // fixed current date
+  const date = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
         const studentRes = await axios.get('http://localhost:5000/api/auth/users/student');
         setStudents(studentRes.data);
-        const initial = {};
-        studentRes.data.forEach(s => initial[s._id] = null);
-        setAttendance(initial);
 
-        const checkRes = await axios.get(`http://localhost:5000/api/attendance/check?markedBy=${user.id}&date=${date}`);
-        if (checkRes.data.exists) {
+        const attendanceRes = await axios.get(`http://localhost:5000/api/attendance/check?markedBy=${user._id}&date=${date}`);
+        const initialAttendance = {};
+
+        if (attendanceRes.data.exists) {
           setSubmittedToday(true);
-          const existing = {};
-          checkRes.data.records.forEach(rec => {
-            existing[rec.studentId] = rec.status;
+          attendanceRes.data.records.forEach(rec => {
+            initialAttendance[rec.studentId] = rec.status;
           });
-          setAttendance(existing);
-          setSubject(checkRes.data.records[0]?.subject || '');
-          setCourse(checkRes.data.records[0]?.course || '');
-          setBranch(checkRes.data.records[0]?.branch || '');
-          setSession(checkRes.data.records[0]?.session || '');
+        } else {
+          studentRes.data.forEach(s => {
+            initialAttendance[s._id] = null;
+          });
         }
+
+        setAttendance(initialAttendance);
       } catch (err) {
         console.error(err);
-        alert("Error check the console");
+        alert("Failed to load data. Check console.");
       }
     };
+
     fetchInitialData();
-  }, [user.id, date]);
+  }, [user._id, date]);
+
+  useEffect(() => {
+    const filtered = students.filter(
+      (s) =>
+        s.branch.toLowerCase() === branch.toLowerCase() &&
+        s.course.toLowerCase() === course.toLowerCase() &&
+        s.batch.toLowerCase() === session.toLowerCase()
+    );
+    setFilteredUsers(filtered);
+  }, [students, course, branch, session]);
 
   const handleStatusChange = (id, status) => {
     setAttendance(prev => ({ ...prev, [id]: status }));
   };
-
+  console.log(attendance);
   const handleSubmit = async () => {
     try {
       const payload = Object.keys(attendance).map(studentId => ({
-        student:studentId,
+        student: studentId,
         date,
-        status: attendance[studentId] || 'absent', // default to absent if not selected
+        status: attendance[studentId] || 'absent',
         subject,
-        // course,
-        // branch,
-        // session,
-        markedBy: user.id,
+        markedBy: user._id
       }));
 
       if (submittedToday) {
@@ -70,7 +78,8 @@ const TeacherMarkAttendance = () => {
         setSubmittedToday(true);
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Error saving attendance');
+      console.error(err);
+      alert(err.response?.data?.message || 'Error submitting attendance');
     }
   };
 
@@ -84,76 +93,78 @@ const TeacherMarkAttendance = () => {
           className="border p-2 rounded"
           value={subject}
           onChange={e => setSubject(e.target.value)}
-          disabled={submittedToday}
           required
         />
-        <select className="border p-2 rounded" value={course} onChange={e => setCourse(e.target.value)} disabled={submittedToday}>
-          <option value="">Course</option>
-          <option>BTech</option>
-          <option>BCA</option>
-          <option>MCA</option>
-          <option>Pharmacy</option>
-          <option>Agriculture</option>
+        <select className="border p-2 rounded" value={course} onChange={e => setCourse(e.target.value)}>
+          <option value="btech">BTech</option>
+          <option value="bca">BCA</option>
+          <option value="mca">MCA</option>
+          <option value="pharmacy">Pharmacy</option>
+          <option value="agriculture">Agriculture</option>
         </select>
-        <select className="border p-2 rounded" value={session} onChange={e => setSession(e.target.value)} disabled={submittedToday}>
-          <option value="">Session</option>
-          <option>2022-2026</option>
-          <option>2023-2027</option>
-          <option>2024-2028</option>
-          <option>2025-2029</option>
+        <select className="border p-2 rounded" value={session} onChange={e => setSession(e.target.value)}>
+          <option value="2022-2026">2022-2026</option>
+          <option value="2023-2027">2023-2027</option>
+          <option value="2024-2028">2024-2028</option>
+          <option value="2025-2029">2025-2029</option>
         </select>
-        <select className="border p-2 rounded" value={branch} onChange={e => setBranch(e.target.value)} disabled={submittedToday}>
-          <option value="">Branch</option>
-          <option>CSE</option>
-          <option>ME</option>
-          <option>CSE-AIML</option>
-          <option>CE</option>
-          <option>EC</option>
+        <select className="border p-2 rounded" value={branch} onChange={e => setBranch(e.target.value)}>
+          <option value="cse">CSE</option>
+          <option value="me">ME</option>
+          <option value="cse-aiml">CSE-AIML</option>
+          <option value="ce">CE</option>
+          <option value="ec">EC</option>
         </select>
       </div>
 
-      <table className="w-full table-auto border-collapse mb-4">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Present</th>
-            <th className="border px-4 py-2">Absent</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.map(student => (
-            <tr key={student._id} className="text-center">
-              <td className="border px-4 py-2">{student.name}</td>
-              <td className="border px-4 py-2">
-                <input
-                  type="radio"
-                  name={`status-${student._id}`}
-                  value="present"
-                  checked={attendance[student._id] === 'present'}
-                  onChange={() => handleStatusChange(student._id, 'present')}
-                />
-              </td>
-              <td className="border px-4 py-2">
-                <input
-                  type="radio"
-                  name={`status-${student._id}`}
-                  value="absent"
-                  checked={attendance[student._id] === 'absent'}
-                  onChange={() => handleStatusChange(student._id, 'absent')}
-                />
-              </td>
+      {filteredUsers.length > 0 ? (
+        <table className="w-full table-auto border-collapse mb-4">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="border px-4 py-2">Name</th>
+              <th className="border px-4 py-2">Present</th>
+              <th className="border px-4 py-2">Absent</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredUsers.map(student => (
+              <tr key={student._id} className="text-center">
+                <td className="border px-4 py-2">{student.name}</td>
+                <td className="border px-4 py-2">
+                  <input
+                    type="radio"
+                    name={`status-${student._id}`}
+                    value="present"
+                    checked={attendance[student._id] === 'present'}
+                    onChange={() => handleStatusChange(student._id, 'present')}
+                  />
+                </td>
+                <td className="border px-4 py-2">
+                  <input
+                    type="radio"
+                    name={`status-${student._id}`}
+                    value="absent"
+                    checked={attendance[student._id] === 'absent'}
+                    onChange={() => handleStatusChange(student._id, 'absent')}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No students found.</p>
+      )}
 
       <button
         onClick={handleSubmit}
-        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+        className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 mr-2"
       >
         {submittedToday ? 'Update Attendance' : 'Submit Attendance'}
       </button>
-      <Link to={'/teacher'}><button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 block mt-2">Back</button></Link>
+      <Link to="/teacher">
+        <button className="bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700">Back</button>
+      </Link>
     </div>
   );
 };

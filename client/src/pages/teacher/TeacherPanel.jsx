@@ -16,15 +16,16 @@ const TeacherPanel = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/teacher/stats/${user.id}`);
-        setStats(res.data);
+        const attendance = await axios.get(`http://localhost:5000/api/attendance/check?markedBy=${user._id}`);
+        const stu = await axios.get(`http://localhost:5000/api/auth/users/student`);
+        setStats({...stats,totalStudents:stu.data.length,attendanceTaken:attendance.data.records.length});
       } catch (err) {
         console.error('Failed to load teacher dashboard stats:', err);
         alert("Error: check the console");
       }
     };
 
-    if (user?.id) fetchStats();
+    if (user?._id) fetchStats();
   }, [user]);
 
   return (
@@ -46,7 +47,7 @@ const TeacherPanel = () => {
             </div>
             <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-600">
               <h3 className="text-lg font-medium text-gray-700">Courses Assigned</h3>
-              <p className="text-3xl font-bold text-green-700 mt-2">{stats.totalCourses}</p>
+              <p className="text-3xl font-bold text-green-700 mt-2">{user.courseAssigned}</p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-600">
               <h3 className="text-lg font-medium text-gray-700">Attendance Taken</h3>

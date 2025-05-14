@@ -29,9 +29,6 @@ const TeacherProfile = () => {
                 <strong>Course:</strong> <span>{user.course}</span>
               </div>
               <div>
-                <strong>Department:</strong> <span>{user.dept}</span>
-              </div>
-              <div>
                 <strong>Role:</strong> <span>{user.role}</span>
               </div>
             </div>

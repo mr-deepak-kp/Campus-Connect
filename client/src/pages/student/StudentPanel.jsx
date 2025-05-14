@@ -12,14 +12,15 @@ const StudentPanel = () => {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/attendance/student/${user.id}`);
+        console.log(user);
+        const res = await axios.get(`http://localhost:5000/api/attendance/student/${user._id}`);
         setRecords(res.data);
       } catch (error) {
         console.error('Error fetching attendance:', error);
         alert("Error check the console");
       }
     };
-    if (user?.id) fetchAttendance();
+    if (user?._id) fetchAttendance();
   }, [user]);
 
   const presentCount = records.filter(r => r.status === 'present').length;

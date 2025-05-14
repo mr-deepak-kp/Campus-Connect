@@ -13,7 +13,11 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+// Allow your frontend domain
+app.use(cors({
+  origin: 'https://campusconnect-frontend-iui5.onrender.com',
+  credentials: true
+}));
 
 
 // Route

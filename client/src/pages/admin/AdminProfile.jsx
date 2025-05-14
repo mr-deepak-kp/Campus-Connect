@@ -27,7 +27,7 @@ const AdminProfile = () => {
               </div>
               <div className="flex justify-between">
                 <span className="font-medium">Admin ID:</span>
-                <span>{user?.id}</span>
+                <span>{user?.adminId}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium">Course:</span>

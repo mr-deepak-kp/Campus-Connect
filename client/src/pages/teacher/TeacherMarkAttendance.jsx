@@ -4,7 +4,7 @@ import { AuthContext } from '../../context/AuthContext.jsx';
 import { Link } from 'react-router-dom';
 
 const TeacherMarkAttendance = () => {
-  const { user } = useContext(AuthContext);
+  const { user, backendURL } = useContext(AuthContext);
   const [students, setStudents] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [attendance, setAttendance] = useState({});
@@ -18,10 +18,10 @@ const TeacherMarkAttendance = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const studentRes = await axios.get('http://localhost:5000/api/auth/users/student');
+        const studentRes = await axios.get(`${backendURL}/api/auth/users/student`);
         setStudents(studentRes.data);
 
-        const attendanceRes = await axios.get(`http://localhost:5000/api/attendance/check?markedBy=${user._id}&date=${date}`);
+        const attendanceRes = await axios.get(`${backendURL}/api/attendance/check?markedBy=${user._id}&date=${date}`);
         const initialAttendance = {};
 
         if (attendanceRes.data.exists) {
@@ -70,10 +70,10 @@ const TeacherMarkAttendance = () => {
       }));
 
       if (submittedToday) {
-        await axios.put('http://localhost:5000/api/attendance/update-today', payload);
+        await axios.put(`${backendURL}/api/attendance/update-today`, payload);
         alert('Attendance updated successfully!');
       } else {
-        await axios.post('http://localhost:5000/api/attendance', payload);
+        await axios.post(`${backendURL}/api/attendance`, payload);
         alert('Attendance marked successfully!');
         setSubmittedToday(true);
       }

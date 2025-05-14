@@ -5,7 +5,7 @@ import { AuthContext } from '../../context/AuthContext.jsx';
 import axios from 'axios';
 
 const TeacherPanel = () => {
-  const { user } = useContext(AuthContext);
+  const { user, backendURL } = useContext(AuthContext);
   const [stats, setStats] = useState({
     totalStudents: 0,
     totalCourses: 0,
@@ -15,8 +15,8 @@ const TeacherPanel = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const attendance = await axios.get(`http://localhost:5000/api/attendance/check?markedBy=${user._id}`);
-        const stu = await axios.get(`http://localhost:5000/api/auth/users/student`);
+        const attendance = await axios.get(`${backendURL}/api/attendance/check?markedBy=${user._id}`);
+        const stu = await axios.get(`${backendURL}/api/auth/users/student`);
         setStats({...stats,totalStudents:stu.data.length,attendanceTaken:attendance.data.records.length});
       } catch (err) {
         console.error('Failed to load teacher dashboard stats:', err);

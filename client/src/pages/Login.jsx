@@ -7,7 +7,7 @@ import heroImage from '../assets/images/hero-image.jpg';
 
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
-  const { user,setUser,userType} = useContext(AuthContext);
+  const { user,setUser,userType,backendURL} = useContext(AuthContext);
   const navigate = useNavigate();
   useEffect(()=>{
     const alreadyLogin = ()=>{
@@ -20,7 +20,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', form);
+      const res = await axios.post(`${backendURL}/api/auth/login`, form);
       setUser(res.data.user);
       navigate('/dashboard');
     } catch (err) {

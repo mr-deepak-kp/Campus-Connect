@@ -5,12 +5,12 @@ import axios from 'axios';
 import StudentSidebar from './StudentSidebar.jsx';
 import TopNav from '../../components/homeComponents/TopNav.jsx';
 const StudentAttendance = () => {
-  const { user } = useContext(AuthContext);
+  const { user,backendURL } = useContext(AuthContext);
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     const fetchAttendance = async () => {
-      const res = await axios.get(`http://localhost:5000/api/attendance/student/${user._id}`);
+      const res = await axios.get(`${backendURL}/api/attendance/student/${user._id}`);
       console.log(res);
       setRecords(res.data);
     };

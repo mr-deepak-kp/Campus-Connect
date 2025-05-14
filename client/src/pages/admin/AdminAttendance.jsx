@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AttendanceTable from '../../components/AttendanceTable.jsx';
 import axios from 'axios';
 import AdminSidebar from './AdminSidebar.jsx';
+import { AuthContext } from '../../context/AuthContext.jsx';
 
 const AdminAttendance = () => {
   const [attendance, setAttendance] = useState([]);
-
+  const {backendURL} = useContext(AuthContext);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const attendanceRes = await axios.get('http://localhost:5000/api/attendance');
+        const attendanceRes = await axios.get(`${backendURL}/api/attendance`);
         console.log(attendanceRes);
         setAttendance(attendanceRes.data);
       } catch (error) {
@@ -22,7 +23,7 @@ const AdminAttendance = () => {
 
   const handleDownloadCSV = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/attendance/csv', {
+      const response = await axios.get(`${backendURL}/api/attendance/csv`, {
         responseType: 'blob',
       });
 

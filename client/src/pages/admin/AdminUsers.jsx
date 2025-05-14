@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-
+  const {backendURL} = useContext(AuthContext);
   const fetchData = async (userType) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/auth/users/${userType}`);
+      const res = await axios.get(`${backendURL}/api/auth/users/${userType}`);
       setUsers(res.data);
       setFilteredUsers(res.data);
       setSearchTerm('');

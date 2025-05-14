@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import Topbar from '../../components/Topbar.jsx';
 import TeacherSidebar from './TeacherSidebar.jsx';
-import TopNav from '../../components/homeComponents/TopNav.jsx';
 const TeacherProfile = () => {
   const { user } = useContext(AuthContext);
 

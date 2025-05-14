@@ -6,14 +6,14 @@ import Topbar from '../../components/Topbar.jsx';
 import TopNav from '../../components/homeComponents/TopNav.jsx';
 
 const StudentPanel = () => {
-  const { user } = useContext(AuthContext);
+  const { user, backendURL } = useContext(AuthContext);
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
         console.log(user);
-        const res = await axios.get(`http://localhost:5000/api/attendance/student/${user._id}`);
+        const res = await axios.get(`${backendURL}/api/attendance/student/${user._id}`);
         setRecords(res.data);
       } catch (error) {
         console.error('Error fetching attendance:', error);

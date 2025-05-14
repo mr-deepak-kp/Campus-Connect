@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { AuthContext } from "../../context/AuthContext";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -16,7 +17,7 @@ const Register = () => {
     adminId:'',
     courseAssigned:0,
   });
-
+  const {backendURL} = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = e => {
@@ -26,7 +27,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/register', form);
+      await axios.post(`${backendURL}/api/auth/register`, form);
       alert("User registered successfully");
       navigate('/admin/users');
     } catch (err) {

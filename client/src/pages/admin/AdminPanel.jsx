@@ -1,11 +1,9 @@
 import React from 'react';
 import AdminSidebar from './AdminSidebar';
-import TopNav from '../../components/homeComponents/TopNav.jsx';
 import Topbar from '../../components/Topbar.jsx'
 const AdminPanel = () => {
   return (
     <>
-    <TopNav/>
     <div className="flex min-h-screen bg-gray-100">
       
       <AdminSidebar />

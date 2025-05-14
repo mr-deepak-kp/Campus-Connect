@@ -22,7 +22,6 @@ const TopNav = () => {
     
         {/* Right Section: Links */}
         <div className="flex space-x-4 items-center">
-          <Link to="/" className="text-sm hover:text-yellow-400 transition">Home</Link>
           <Link to="/dashboard" className="text-sm hover:text-yellow-400 transition">Dashboard</Link>
           <button onClick={() => setUser(null)} className="text-sm hover:text-yellow-400 transition">Logout</button>
         </div>

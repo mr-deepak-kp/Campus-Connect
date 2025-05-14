@@ -11,7 +11,7 @@ const Register = () => {
     rollNo: '',
     branch: 'cse',
     course: 'Btech',
-    batch: '',
+    batch: '2022-2026',
     teacherId: '',
     adminId:'',
     courseAssigned:0,

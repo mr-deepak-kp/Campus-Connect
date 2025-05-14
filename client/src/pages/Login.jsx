@@ -86,7 +86,7 @@ const Login = () => {
               </button>
             </div>
             <div className="text-center">
-              <Link to="/forgot-password" className="text-sm text-indigo-600 hover:underline">
+              <Link to="/forgot" className="text-sm text-indigo-600 hover:underline">
                 Forgot Password?
               </Link>
             </div>

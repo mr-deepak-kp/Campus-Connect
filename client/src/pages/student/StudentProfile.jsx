@@ -7,8 +7,6 @@ const StudentProfile = () => {
   const { user } = useContext(AuthContext);
   console.log(user);
   return (
-    <>
-    <TopNav/>
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <Sidebar />
@@ -34,7 +32,6 @@ const StudentProfile = () => {
         </div>
       </div>
     </div>
-    </>
   );
 };
 

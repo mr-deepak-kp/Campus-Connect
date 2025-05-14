@@ -27,8 +27,6 @@ const StudentPanel = () => {
   const absentCount = records.filter(r => r.status === 'absent').length;
 
   return (
-    <>
-    <TopNav/>
     <div className="flex min-h-screen">
       <StudentSidebar />
       <div className="flex-1 bg-gray-50">
@@ -58,7 +56,6 @@ const StudentPanel = () => {
         </div>
       </div>
     </div>
-    </>
   );
 };
 

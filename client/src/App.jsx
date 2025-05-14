@@ -53,6 +53,7 @@ function App() {
 
         {/* Auth Pages */}
         <Route path="/login" element={<Login />} />
+        <Route path='/forgot' element={<Login/>} />
         <Route path="/register" element={
           <AdminOnlyRoute>
             <Register />

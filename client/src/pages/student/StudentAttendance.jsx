@@ -22,8 +22,6 @@ const StudentAttendance = () => {
   const totalCount = records.length;
 
   return (
-    <>
-    <TopNav/>
     <div className="flex">
       <StudentSidebar />
       <div className="flex-1 p-6 bg-gray-100 min-h-screen">
@@ -47,7 +45,6 @@ const StudentAttendance = () => {
         <AttendanceTable records={records} />
       </div>
     </div>
-    </>
   );
 };
 

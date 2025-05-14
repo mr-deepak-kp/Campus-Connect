@@ -63,7 +63,7 @@ router.get('/csv', async (req, res) => {
         status: record.status,
         markedBy: record.markedBy?.name || '',
     }));
-      const fields = ['studentName','Email','Batch','Course','Branch', 'date', 'subject', 'status', 'markedByName'];
+      const fields = ['studentName','Email','Batch','Course','Branch', 'date', 'subject', 'status', 'markedBy'];
       const parser = new Parser({ fields });
       const csv = parser.parse(flatRecords);
   

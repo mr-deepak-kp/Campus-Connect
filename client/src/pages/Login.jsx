@@ -4,29 +4,40 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
 import TopNav from '../components/homeComponents/TopNav.jsx';
 import heroImage from '../assets/images/hero-image.jpg';
+import Loading from '../components/Loading.jsx';
 
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
-  const { user,setUser,userType,backendURL} = useContext(AuthContext);
+  const { user, setUser, userType, backendURL } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true); // loading state
   const navigate = useNavigate();
-  useEffect(()=>{
-    const alreadyLogin = ()=>{
-      if(user) navigate(`/dashboard`);
+
+  // Check if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      setLoading(false);
     }
-    alreadyLogin();
-  })
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  }, [user, navigate]);
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading while login
     try {
       const res = await axios.post(`${backendURL}/api/auth/login`, form);
       setUser(res.data.user);
       navigate('/dashboard');
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed.');
+      setLoading(false); // Stop loading if login failed
     }
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="relative min-h-screen flex flex-col">
@@ -44,17 +55,29 @@ const Login = () => {
       {/* Login Content */}
       <div className="flex-grow flex items-center justify-center relative z-10 px-4">
         <div className="text-center text-white mb-8">
-          <h1 className="text-4xl font-bold drop-shadow-lg">Welcome to CampusConnect</h1>
+          <h1 className="text-4xl font-bold drop-shadow-lg">
+            Welcome to CampusConnect
+          </h1>
           <p className="mt-2 bg-black bg-opacity-80 inline-block px-4 py-2 rounded text-sm md:text-base shadow-md">
-            Empowering Minds, Shaping Futures — <span className="text-yellow-400 font-semibold">Welcome to CampusConnect</span>
+            Empowering Minds, Shaping Futures —{' '}
+            <span className="text-yellow-400 font-semibold">
+              Welcome to CampusConnect
+            </span>
           </p>
         </div>
 
         <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login {userType}</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+            Login {userType}
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email ID</label>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email ID
+              </label>
               <input
                 onChange={handleChange}
                 type="email"
@@ -66,7 +89,12 @@ const Login = () => {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
               <input
                 onChange={handleChange}
                 type="password"

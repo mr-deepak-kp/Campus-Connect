@@ -24,11 +24,11 @@ const AdminAttendance = () => {
     fetchData();
   }, [backendURL]);
 
-  const getPresentCount = (studentId) => {
-    let stu = attendanceData.filter((record) => record.student === studentId);
-    console.log(stu);
-    return stu.filter(r => r.status === 'present').length;
-  };
+ const getPresentCount = (studentId) => {
+  return attendanceData.filter((record) =>
+    record.student?.toString() === studentId.toString() && record.status === 'present'
+  ).length;
+};
 
   const totalClasses = [...new Set(attendanceData.map((record) => record.date))].length;
 

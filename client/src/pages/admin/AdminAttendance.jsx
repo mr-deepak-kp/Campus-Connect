@@ -12,7 +12,7 @@ const AdminAttendance = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const studentsRes = await axios.get(`${backendURL}/api/student`);
+        const studentsRes = await axios.get(`${backendURL}/api/auth/users/student`);
         const attendanceRes = await axios.get(`${backendURL}/api/attendance`);
         setStudents(studentsRes.data);
         setAttendanceData(attendanceRes.data);

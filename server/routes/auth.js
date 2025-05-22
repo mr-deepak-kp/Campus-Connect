@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import Student from '../models/Student.js';
 import Admin from '../models/Admin.js';
 import Teacher from '../models/Teacher.js';
+import Attendance from '../models/Attendance.js';
 const router = express.Router();
 
 //route for register a user by admin panel
@@ -96,4 +97,41 @@ router.get('/users/:userType', async (req, res) => {
       res.status(500).json({ message: err.message });
     }
 });
+
+router.get('/summary', async (req, res) => {
+  try {
+    // Step 1: Get all students
+    const students = await Student.find();
+
+    // Step 2: Get all attendance records
+    const attendanceRecords = await Attendance.find();
+
+    // Step 3: Build summary for each student
+    const summary = students.map((student) => {
+      const studentAttendance = attendanceRecords.filter(
+        (record) => record.student.toString() === student._id.toString()
+      );
+
+      const present = studentAttendance.filter((r) => r.status === 'present').length;
+      const total = studentAttendance.length;
+      const percentage = total > 0 ? ((present / total) * 100).toFixed(2) : 0;
+
+      return {
+        name: student.name,
+        email: student.email,
+        branch: student.branch,
+        course: student.course,
+        present,
+        total,
+        percentage,
+      };
+    });
+
+    res.json(summary);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
 export default router;

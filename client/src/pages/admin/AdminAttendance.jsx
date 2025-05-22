@@ -1,118 +1,104 @@
+// AdminAttendance.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import AdminSidebar from './AdminSidebar.jsx';
 import { AuthContext } from '../../context/AuthContext.jsx';
 
 const AdminAttendance = () => {
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [students, setStudents] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [attendance, setAttendance] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { backendURL } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchSummary = async () => {
       try {
-        const studentsRes = await axios.get(`${backendURL}/api/auth/users/student`);
-        const attendanceRes = await axios.get(`${backendURL}/api/attendance`);
-        setStudents(studentsRes.data);
-        setAttendanceData(attendanceRes.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        alert('Failed to load data. Please check console.');
+        const res = await axios.get(`${backendURL}/api/auth/summary`);
+        setAttendance(res.data);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch summary data.");
       }
     };
-    fetchData();
+    fetchSummary();
   }, [backendURL]);
 
- const getPresentCount = (studentId) => {
-  return attendanceData.filter((record) =>
-    record.student?.toString() === studentId.toString() && record.status === 'present'
-  ).length;
-};
-
-  const totalClasses = [...new Set(attendanceData.map((record) => record.date))].length;
-
-  const filteredStudents = students.filter((student) => {
-    const search = searchQuery.toLowerCase();
-    return (
-      student.name.toLowerCase().includes(search) ||
-      student.email.toLowerCase().includes(search) ||
-      student.branch.toLowerCase().includes(search) ||
-      student.course.toLowerCase().includes(search)
-    );
-  });
-
   const handleDownloadCSV = () => {
-    let csv = 'Name,Email,Branch,Course,Present,Total,Percentage\n';
-    filteredStudents.forEach((student) => {
-      const present = getPresentCount(student._id);
-      const percentage = totalClasses > 0 ? ((present / totalClasses) * 100).toFixed(2) : '0.00';
-      csv += `${student.name},${student.email},${student.branch},${student.course},${present},${totalClasses},${percentage}%\n`;
-    });
+    const headers = ['Name', 'Email', 'Branch', 'Course', 'Present', 'Total', 'Percentage'];
+    const rows = attendance.map(student => [
+      student.name,
+      student.email,
+      student.branch,
+      student.course,
+      student.present,
+      student.total,
+      `${student.percentage}%`
+    ]);
 
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'attendance_report.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "attendance_summary.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
+
+  const filteredData = attendance.filter(student =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.branch.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.course.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <AdminSidebar />
       <main className="flex-1 p-6">
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 className="text-2xl font-bold text-gray-800">Attendance Records</h1>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder="Search by name, email, branch..."
-              className="px-3 py-2 border rounded-md focus:outline-none"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button
-              onClick={handleDownloadCSV}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-            >
-              Download CSV
-            </button>
-          </div>
+        <div className="mb-6 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800">Attendance Summary</h1>
+          <button
+            onClick={handleDownloadCSV}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Download CSV
+          </button>
         </div>
 
-        <div className="bg-white rounded shadow overflow-x-auto">
+        <input
+          type="text"
+          placeholder="Search by name, email, branch, or course"
+          className="w-full mb-4 p-2 border rounded"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        <div className="bg-white p-4 rounded shadow overflow-x-auto">
           <table className="min-w-full table-auto">
-            <thead className="bg-gray-100 text-left text-sm font-semibold">
-              <tr>
+            <thead>
+              <tr className="bg-gray-200 text-left">
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2">Branch</th>
                 <th className="px-4 py-2">Course</th>
                 <th className="px-4 py-2">Present</th>
                 <th className="px-4 py-2">Total</th>
-                <th className="px-4 py-2">%</th>
+                <th className="px-4 py-2">% Present</th>
               </tr>
             </thead>
-            <tbody className="text-sm divide-y">
-              {filteredStudents.map((student) => {
-                const present = getPresentCount(student._id);
-                const percentage = totalClasses > 0 ? ((present / totalClasses) * 100).toFixed(2) : '0.00';
-
-                return (
-                  <tr key={student._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-2">{student.name}</td>
-                    <td className="px-4 py-2">{student.email}</td>
-                    <td className="px-4 py-2">{student.branch}</td>
-                    <td className="px-4 py-2">{student.course}</td>
-                    <td className="px-4 py-2 text-green-600 font-semibold">{present}</td>
-                    <td className="px-4 py-2 text-gray-700">{totalClasses}</td>
-                    <td className="px-4 py-2 text-blue-600 font-bold">{percentage}%</td>
-                  </tr>
-                );
-              })}
+            <tbody>
+              {filteredData.map((student, index) => (
+                <tr key={index} className="border-b">
+                  <td className="px-4 py-2">{student.name}</td>
+                  <td className="px-4 py-2">{student.email}</td>
+                  <td className="px-4 py-2">{student.branch}</td>
+                  <td className="px-4 py-2">{student.course}</td>
+                  <td className="px-4 py-2">{student.present}</td>
+                  <td className="px-4 py-2">{student.total}</td>
+                  <td className="px-4 py-2">{student.percentage}%</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

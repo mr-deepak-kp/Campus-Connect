@@ -92,8 +92,8 @@ const AdminAttendance = () => {
                 <tr key={index} className="border-b">
                   <td className="px-4 py-2">{student.name}</td>
                   <td className="px-4 py-2">{student.email}</td>
-                  <td className="px-4 py-2">{student.branch}</td>
-                  <td className="px-4 py-2">{student.course}</td>
+                  <td className="px-4 py-2">{student.branch.toUpperCase()}</td>
+                  <td className="px-4 py-2">{student.course.toUpperCase()}</td>
                   <td className="px-4 py-2">{student.present}</td>
                   <td className="px-4 py-2">{student.total}</td>
                   <td className="px-4 py-2">{student.percentage}%</td>

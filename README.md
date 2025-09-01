@@ -40,3 +40,13 @@ It brings together **students, faculty, and administration** into a unified digi
 - **Cloud & Services:** AWS SDK  
 
 ---
+
+📸 Screenshots
+<img width="1894" height="903" alt="Screenshot 2025-09-02 030352" src="https://github.com/user-attachments/assets/cecfe312-c6d4-492e-b2ef-43541722c24f" />
+
+---
+
+🌐 Localhost 👉 Click here to view :  http://localhost:5173/
+
+---
+
